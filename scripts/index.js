@@ -1,3 +1,7 @@
+import { Card } from "./Card.js";
+import { FormValidator } from "./FormValidator.js";
+import { initialCards } from "./data.js";
+
 // Конфиг для валидации
 const validationConfig = {
   formSelector: '.popup__form',
@@ -26,15 +30,10 @@ const popupProfile = document.querySelector('.popup_type_profile');
 const popupFormProfile = popupProfile.querySelector('.popup__form');
 const inputName = popupProfile.querySelector('.popup__input_type_name');
 const inputAbout = popupProfile.querySelector('.popup__input_type_about');
-const profileInputList = Array.from(popupFormProfile.querySelectorAll('.popup__input'));
-const profileSaveButton = popupFormProfile.querySelector('.popup__save-button');
+const profileFormValidator = new FormValidator(validationConfig, popupFormProfile);
 
 // Галерея для вставки карточки места
 const gallery = document.querySelector('.gallery');
-
-// Шаблон карточки места
-const cardTemplate = document.querySelector('#cardTemplate').content;
-const cardElement = cardTemplate.querySelector('.gallery__item');
 
 // Кнопка добавления карточки места
 const cardAddButton = document.querySelector('.profile__add-button');
@@ -42,10 +41,7 @@ const cardAddButton = document.querySelector('.profile__add-button');
 // Popup создания карточки места
 const popupCard = document.querySelector('.popup_type_card');
 const popupFormCard = popupCard.querySelector('.popup__form');
-const inputPlace = popupCard.querySelector('.popup__input_type_place');
-const inputLink = popupCard.querySelector('.popup__input_type_link');
-const cardInputList = Array.from(popupFormCard.querySelectorAll('.popup__input'));
-const cardSaveButton = popupFormCard.querySelector('.popup__save-button');
+const cardFormValidator = new FormValidator(validationConfig, popupFormCard);
 
 // Popup фотографии места
 const popupFigure = document.querySelector('.popup_type_img');
@@ -91,10 +87,7 @@ popupList.forEach((popup) => {
 profileEditButton.addEventListener('click', () => {
   inputName.value = profileName.textContent;
   inputAbout.value = profileAbout.textContent;
-  toggleButtonState(profileInputList, profileSaveButton, validationConfig);
-  profileInputList.forEach((inputElement) => {
-    hideInputError(popupFormProfile, inputElement, validationConfig);
-  });
+  profileFormValidator.resetValidation();
   openPopup(popupProfile);
 });
 
@@ -105,7 +98,12 @@ function savePopupProfile(evt) {
   closePopup(popupProfile);
 };
 
-popupFormProfile.addEventListener('submit', savePopupProfile);
+// Получение данных из формы создания карточки места
+cardAddButton.addEventListener('click', () => {
+  popupFormCard.reset();
+  cardFormValidator.resetValidation();
+  openPopup(popupCard);
+});
 
 // Открытие изображения на весь экран
 function openImg(name, link) {
@@ -115,54 +113,29 @@ function openImg(name, link) {
   openPopup(popupFigure);
 };
 
-//Формирование карточки места
-function createCard(name, link) {
-  const newCard = cardElement.cloneNode(true);
-  const cardPhoto = newCard.querySelector('.gallery__photo');
-  const cardTitle = newCard.querySelector('.gallery__title');
-  const cardDeleteButton = newCard.querySelector('.gallery__del');
-  const heart = newCard.querySelector('.gallery__like');
-
-  cardPhoto.src = link;
-  cardPhoto.alt = name;
-  cardTitle.textContent = name;
-
-  cardPhoto.addEventListener('click', () => {
-    openImg(name, link);
-  });
-
-  cardDeleteButton.addEventListener('click', () => {
-    newCard.remove();
-  });
-
-  heart.addEventListener('click', () => {
-    heart.classList.toggle('gallery__like_active');
-  });
-
-  return newCard;
+// Формирование карточки места
+function createCard(item) {
+  const card = new Card(item, '#cardTemplate', openImg);
+  return card.generateCard();
 };
-
-// Получение данных из формы создания карточки места
-cardAddButton.addEventListener('click', () => {
-  popupFormCard.reset();
-  toggleButtonState(cardInputList, cardSaveButton, validationConfig);
-  cardInputList.forEach((inputElement) => {
-    hideInputError(popupFormCard, inputElement, validationConfig);
-  });
-  openPopup(popupCard);
-});
 
 function savePopupCard(evt) {
   evt.preventDefault();
-  gallery.prepend(createCard(inputPlace.value, inputLink.value));
+  const item = {
+    name: popupCard.querySelector('.popup__input_type_place').value,
+    link: popupCard.querySelector('.popup__input_type_link').value
+  };
+  gallery.prepend(createCard(item));
   closePopup(popupCard);
 };
 
-popupFormCard.addEventListener('submit', savePopupCard);
-
 // Формирование карточек мест из массива
 initialCards.forEach((item) => {
-  gallery.append(createCard(item.name, item.link));
+  gallery.append(createCard(item));
 });
 
-enableValidation(validationConfig);
+popupFormProfile.addEventListener('submit', savePopupProfile);
+popupFormCard.addEventListener('submit', savePopupCard);
+
+profileFormValidator.enableValidation();
+cardFormValidator.enableValidation();
