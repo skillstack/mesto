@@ -41,6 +41,8 @@ const cardAddButton = document.querySelector('.profile__add-button');
 // Popup создания карточки места
 const popupCard = document.querySelector('.popup_type_card');
 const popupFormCard = popupCard.querySelector('.popup__form');
+const popupInputPlace = popupCard.querySelector('.popup__input_type_place');
+const popupInputLink = popupCard.querySelector('.popup__input_type_link');
 const cardFormValidator = new FormValidator(validationConfig, popupFormCard);
 
 // Popup фотографии места
@@ -122,8 +124,8 @@ function createCard(item) {
 function savePopupCard(evt) {
   evt.preventDefault();
   const item = {
-    name: popupCard.querySelector('.popup__input_type_place').value,
-    link: popupCard.querySelector('.popup__input_type_link').value
+    name: popupInputPlace.value,
+    link: popupInputLink.value
   };
   gallery.prepend(createCard(item));
   closePopup(popupCard);
