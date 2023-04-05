@@ -14,10 +14,12 @@
     </header>
     <main class="content">
       <section class="profile">
-        <img class="profile__photo" src="<%=require('./images/profile-avatar.jpg')%>" alt="Аватар профиля">
+        <button class="profile__edit-img-button" type="button" aria-label="Отредактировать аватар профиля">
+          <img class="profile__photo" src="#" alt="Аватар профиля">
+        </button>
         <div class="profile__info">
-          <h1 class="profile__title">Жак-Ив Кусто</h1>
-          <p class="profile__subtitle">Исследователь океана</p>
+          <h1 class="profile__title"></h1>
+          <p class="profile__subtitle"></p>
           <button class="profile__edit-button" type="button" aria-label="Отредактировать профиль"></button>
         </div>
         <button class="profile__add-button" type="button" aria-label="Добавить новое место"></button>
@@ -29,6 +31,21 @@
     <footer class="footer">
       <p class="footer__copy">&copy; 2020 Mesto Russia</p>
     </footer>
+
+    <!-- Редактирование фото профиля -->
+
+    <div class="popup popup_type_avatar">
+      <div class="popup__container">
+        <button class="popup__close-button" type="button" aria-label="Закрыть форму редактирования аватара"></button>
+        <h2 class="popup__title">Обновить аватар</h2>
+        <form class="popup__form" name="popup-form" novalidate>
+          <input class="popup__input popup__input_type_link" id="link-input" type="url" name="link"
+            placeholder="Ссылка на аватар" required>
+          <span class="popup__input-error link-input-error"></span>
+          <button class="popup__save-button" type="submit">Сохранить</button>
+        </form>
+      </div>
+    </div>
 
     <!-- Редактирование профиля -->
 
@@ -66,7 +83,7 @@
       </div>
     </div>
 
-    <!-- Просмотр фото на весь экран -->
+    <!-- Просмотр фото места на весь экран -->
 
     <div class="popup popup_type_img">
       <div class="popup__img-container">
@@ -78,6 +95,16 @@
       </div>
     </div>
 
+    <!-- Подтверждение удаления карточки места -->
+
+    <div class="popup popup_type_confirm">
+      <div class="popup__container">
+        <button class="popup__close-button" type="button" aria-label="Закрыть форму подтверждения удаления"></button>
+        <h2 class="popup__title">Вы уверены?</h2>
+        <button class="popup__save-button" type="submit">Да</button>
+      </div>
+    </div>
+
     <!-- Шаблон для карточки места -->
 
     <template id="cardTemplate">
@@ -86,7 +113,10 @@
         <img class="gallery__photo" src="#" alt="Название места">
         <div class="gallery__caption">
           <h2 class="gallery__title">Название места</h2>
-          <button class="gallery__like" type="button" aria-label="Поставить сердечко"></button>
+          <div class="gallery__like-container">
+            <button class="gallery__like" type="button" aria-label="Поставить сердечко"></button>
+            <div class="gallery__like-counter"></div>
+          </div>
         </div>
       </div>
     </template>
