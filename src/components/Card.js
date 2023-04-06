@@ -70,7 +70,7 @@ export default class Card {
     });
 
     this._cardLike.addEventListener("click", () => {
-      this._handleLikeClick(this._isLiked(), this._cardId);
+      this._handleLikeClick(this, this._isLiked(), this._cardId);
     });
 
     this._cardDeleteButton.addEventListener("click", () => {

@@ -4,7 +4,7 @@ import Api from "../components/Api.js";
 import FormValidator from "../components/FormValidator.js";
 import PopupWithImage from "../components/PopupWithImage.js";
 import PopupWithForm from "../components/PopupWithForm.js";
-import PopupWithConfirm from '../components/PopupWithConfirm.js';
+import PopupWithConfirmation from '../components/PopupWithConfirmation.js';
 import UserInfo from "../components/UserInfo.js";
 import Card from "../components/Card.js";
 import Section from "../components/Section.js";
@@ -56,32 +56,33 @@ function handleDeleteButtonClick(cardId, card) {
   popupConfirmDeleteCard.open(cardId, card);
 }
 
+function handleLikeClick(card, isLiked, cardId) {
+  if (isLiked) {
+    api.removeCardLike(cardId)
+    .then((cardInfo) => {
+      card.setLikes(cardInfo.likes)
+    })
+    .catch((err) => {
+      console.log(`Ошибка: ${err}`);
+    })
+  } else {
+    api.setCardLike(cardId)
+    .then((cardInfo) => {
+      card.setLikes(cardInfo.likes)
+    })
+    .catch((err) => {
+      console.log(`Ошибка: ${err}`);
+    })
+  }
+}
+
 function displayLoadingText(popupButton, text) {
   popupButton.textContent = text;
 }
 
 function createCard(cardInfo) {
   const userId = userInfo.getUserId();
-  const card = new Card(cardInfo, '#cardTemplate', handleCardClick, handleDeleteButtonClick,
-    (isLiked, cardId) => {
-      if (isLiked) {
-        api.removeCardLike(cardId)
-          .then((cardInfo) => {
-            card.setLikes(cardInfo.likes)
-          })
-          .catch((err) => {
-            console.log(`Ошибка: ${err}`);
-          })
-      } else {
-        api.setCardLike(cardId)
-          .then((cardInfo) => {
-            card.setLikes(cardInfo.likes)
-          })
-          .catch((err) => {
-            console.log(`Ошибка: ${err}`);
-          })
-      }
-    }, userId);
+  const card = new Card(cardInfo, '#cardTemplate', handleCardClick, handleDeleteButtonClick, handleLikeClick, userId);
   return card.generateCard();
 };
 
@@ -123,7 +124,7 @@ const popupNewCard = new PopupWithForm({
   }
 })
 
-const popupConfirmDeleteCard = new PopupWithConfirm({
+const popupConfirmDeleteCard = new PopupWithConfirmation({
   popupSelector: '.popup_type_confirm',
   handleFormSubmit: (cardId, card) => {
     api.deleteCard(cardId)
