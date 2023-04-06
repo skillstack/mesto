@@ -18,6 +18,8 @@
 12. Семантические тэги.
 ## Планы по доработке проекта:
 - Провести рефакторинг кода;
+- Сделать универсальный submit для popup;
+- Сделать метод setInputValues для вставки значений в inputs;
 - Добавить в README.md расширенное описание.
 ## Ссылки:
 * [Ссылка на макет 4 спринт в Figma](https://www.figma.com/file/AJlNiRkANk4KLBYfCQ3H5x/JavaScript.-Sprint-4?t=TRIKOiG8frPu6IPE-1)
